@@ -1,0 +1,159 @@
+<!DOCTYPE html>  
+
+<script src="leaflet.js"> // Bibliothèque Leaflet : http://leafletjs.com/ </script>
+
+<title>Tour d'Asie</title>
+<link rel="stylesheet" type="text/css" href="leaflet.css" />  <!-- fichier externe pour definir le style -->
+<link rel="stylesheet" type="text/css" href="style.css"/>
+
+<meta charset="utf-8">
+  
+<body onload="load_data2();"> <!--fonction load_data2 exécutée au lancement de la page -->
+  <nav>
+    <h1>Le Tour d'Asie</h1>
+    <h6>Choisissez le pays que vous voulez connaître !</h6> 
+
+    <!--menu déroulant des pays-->
+    <div align="center">
+      <SELECT ID="pays" onchange="fc()">
+      </SELECT>
+      <p id="description"></p>
+      <img id="drapeau">
+    </div align="center">
+
+    <!--menu déroulant des attributs du top 3-->
+    <hr>
+    <h3><br> Top 3 des pays par:</h3>
+
+    <div align="center">
+      <SELECT ID="attributs" onchange="fonc()">
+      <OPTION> # </OPTION>
+      <OPTION> # </OPTION>
+      <OPTION> # </OPTION>
+      </SELECT>
+      <p id="attribut"></p>
+    </div align="center">
+
+  </nav>
+
+  <!-- Zone pour l'insertion de la carte OSM via Leaflet -->
+  <div>
+    <div id="map" style="margin-bottom:1.33em"> </div>  
+  </div>
+
+
+ </body>
+
+
+
+<script>
+
+// Création d'une carte dans la balise div "map",
+// et position de la vue sur l'Asie
+var map = L.map('map').setView([33.86,74.18], 3);
+
+// Ajout d'une couche de dalles OpenStreetMap
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+     }).addTo(map);
+
+
+// Fonction appelée au chargement de la page
+function load_data2 () {
+
+  // objet pour l'envoi d'une requête Ajax
+  var xhr = new XMLHttpRequest();
+
+  // fonction appelée lorsque la réponse à la requête sera arrivée
+  xhr.onload = function() {
+
+    // transformation des données renvoyées par le serveur
+    // responseText est du type string, data est une liste
+    data = JSON.parse(this.responseText);
+
+    // boucle sur les pays
+    for ( n = 0; n < data.length; n++ ) {
+      // insertion d'un marqueur à la position du pays,
+      // attachement d'une popup, capture de l'événement 'clic'
+      // ajout d'attributs au marqueur
+      var mark=L.marker([data[n].latitude,data[n].longitude]).addTo(map)
+      .bindPopup(data[n].wp)
+      .addEventListener('click',OnMarkerClick);
+      mark.name=data[n].name;
+      mark.wp=data[n].wp;
+      mark.capital=data[n].capital;
+      mark.superficie=data[n].superficie;
+      mark.pib=data[n].pib;
+      mark.call=data[n].call;
+    }
+
+    //remplissage du menu déroulant des pays
+    liste=document.getElementById("pays")
+    for ( i = 0; i < data.length; i++ ) {
+      var option=document.createElement("option")
+      option.text=data[i].wp
+      liste.add(option)
+    }
+
+  };
+
+  // Envoi de la requête Ajax
+  xhr.open('GET','/service/countries/',true);
+  xhr.send();
+}
+
+// Fonction appelée lors d'un clic sur un marqueur (ouverture du popup et remplissage de la zone de description)
+function OnMarkerClick (e) {
+  e.target.getPopup()
+  description.innerHTML= "Full name: " + e.target.name+ "<br>Short Name: " + e.target.wp + "<br>Capitale: " +e.target.capital + "<br>Superficie: " +e.target.superficie + " km²<br>PIB: " +e.target.pib/1000000000+" milliards $<br>Indicateur téléphonique: " + e.target.call;
+  drapeau.src="flags/"+e.target.wp+".png"
+}
+
+
+
+//gestion du clic dans le menu déroulant des pays
+function fc() {
+  var index = document.getElementById("pays").selectedIndex;
+  var lat=data[index].latitude;
+  var long=data[index].longitude;
+  //zoom sur le pays concerné
+  map.setView([lat,long], 4);
+  // création d'un nouveau marqueur pour afficher la popup
+  L.marker([lat,long]).addTo(map).bindPopup(data[index].wp).openPopup();
+  description.innerHTML= "Full name: " + data[index].name + "<br>Capital: " + data[index].capital+ "<br>Superficie: " + data[index].superficie+ " km²<br>PIB: " + data[index].pib/1000000000+" milliards $<br>Indicateur téléphonique: " + data[index].call;
+  drapeau.src="flags/"+data[index].wp+".png"
+};
+
+//gestion du clic dans le menu déroulant du top 3 par attributs
+function fonc() {
+  var index = document.getElementById("attributs").selectedIndex;
+  //1er cas: clic sur 'pib'
+  if (index==0) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data2 = JSON.parse(this.responseText);
+      attribut.innerHTML= "1." + data2[0].wp + "<br>2." + data2[1].wp + "<br>3." + data2[2].wp;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/pib',true);
+    xhr.send(); 
+  }
+
+  //2eme cas: clic sur 'superficie' : idem
+  if (index==1) {
+    var xhr = new XMLHttpRequest();
+
+    // fonction appelée lorsque la réponse à la requête sera arrivée
+    xhr.onload = function() {
+      var data2 = JSON.parse(this.responseText);
+      attribut.innerHTML= "1." + data2[0].wp + "<br>2." + data2[1].wp + "<br>3." + data2[2].wp;
+    }
+    xhr.open('GET','/superficie',true);
+    xhr.send(); 
+  }
+}
+
+
+</script>

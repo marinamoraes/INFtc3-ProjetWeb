@@ -1,0 +1,87 @@
+﻿/* fond de page */
+body {
+  background-image: linear-gradient(0deg, #fff,  #f48a48);
+  background-color: #f48a48;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100vh;
+  margin: 0;
+  /* pour éviter l'ascenseur */
+  box-sizing: border-box;
+}
+
+nav {
+  height:99%;
+  width:24%;
+  position:absolute;
+  left:0;
+  top:0;
+  border-width:3px;
+  border-style:solid;
+  border-color: #f5f5f5 ;
+}
+/* background-repeat:au de titre */
+h1 { 
+  color:  #000 ;
+  text-align: center;
+}
+
+h2 { 
+  color:  #000 ;
+  text-align: center;
+}
+
+h3 { 
+  color:  #000 ;
+  text-align: center;
+}
+
+h4 { 
+  color:  #000 ;
+  text-align: center;
+}
+
+h5 { 
+  color:  #000 ;
+  text-align: center;
+}
+
+h6 { 
+  color:  #000 ;
+  text-align: center;
+}
+
+select{
+  align-itens: center;
+}
+
+p{
+  color: #000;
+  text-align: center;
+}
+
+img{
+  width:70%;
+  margin-left:13%;
+}
+
+/* contenu de la page */
+body > * {   padding-left: 10px; }
+
+/* polices de caractères */
+body { font-family: papyrus, sans-serif; }
+
+/* positionnement des champs */
+label { display: block; }
+label span { display: inline-block; width: 5em; height: 1.5em; }
+
+a.delete:hover {
+  color: red;
+}
+#map { height: 100%;
+  width: 75%;
+  float:right;
+  position:absolute;
+  right:0;
+  top:0;}
