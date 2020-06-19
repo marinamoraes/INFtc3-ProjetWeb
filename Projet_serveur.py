@@ -22,6 +22,24 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
   # on surcharge la méthode qui traite les requêtes GET
   def do_GET(self):
     self.init_params()
+    
+     # le chemin d'accès commence par /countries
+    if self.path.startswith('/countries'):
+      self.send_countries()
+
+    # le chemin d'accès commence par /country et se poursuit par un nom de pays
+    elif self.path_info[0] == 'country' and len(self.path_info) > 1:
+      self.send_country(self.path_info[1])
+
+    # le chemin d'accès commence par /service/countries/...
+    elif self.path_info[0] == 'service' and self.path_info[1] == 'countries' and len(self.path_info) > 1:
+      continent = self.path_info[2] if len(self.path_info) > 2 else None
+      self.send_json_countries(continent)
+
+    # le chemin d'accès commence par /service/country/...
+    elif self.path_info[0] == 'service' and self.path_info[1] == 'country' and len(self.path_info) > 2:
+      self.send_json_country(self.path_info[2])
+   
 
     # requete location - retourne la liste de lieux et leurs coordonnées géogrpahiques
     if self.path_info[0] == "location":
@@ -30,9 +48,8 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     # requete description - retourne la description du lieu dont on passe l'id en paramètre dans l'URL
     elif self.path_info[0] == "description":
-      self.send_json_country(self.path_info[1])
-     
-
+      self.send_json_country(self.path_info[0])
+   
     # requête générique
     elif self.path_info[0] == "service":
       self.send_html('<p>Path info : <code>{}</p><p>Chaîne de requête : <code>{}</code></p>'           .format('/'.join(self.path_info),self.query_string));
@@ -46,7 +63,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       self.send_static()
 
 
-  # méthode pour traiter les requêtes POST - non utilisée dans l'exemple
+  # méthode pour traiter les requêtes POST 
   def do_POST(self):
     self.init_params()
 
@@ -207,7 +224,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     sql = 'SELECT * from countries WHERE wp=?'
 
     # récupération de l'information (ou pas)
-    c.execute(sql,(country))
+    c.execute(sql,(country,))
     return c.fetchone()
    
 
@@ -217,10 +234,12 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 conn = sqlite3.connect('pays5.sqlite')
 
 # Pour accéder au résultat des requêtes sous forme d'un dictionnaire
+
+
 conn.row_factory = sqlite3.Row
 
 
-
 # instanciation et lancement du serveur
-httpd = socketserver.TCPServer(("", 8080), RequestHandler)
+httpd = socketserver.TCPServer(("", 8060), RequestHandler)
 httpd.serve_forever()
+
