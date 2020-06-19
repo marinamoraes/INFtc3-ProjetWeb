@@ -8,6 +8,7 @@ import http.server
 import socketserver
 from urllib.parse import urlparse, parse_qs, unquote
 import json
+import sqlite3
 
 # définition du handler
 class RequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -191,7 +192,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         lat = i['latitude']
         lon = i['longitude']
         name = i['name']
-        continent = i['continent']
+        continent = 'Asie'
         capital = i['capital']
         data.append({'wp': wp, 'lat': lat, 'lon': lon, 'name': name, 'continent': continent, 'capital': capital})
     return data
@@ -206,14 +207,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     sql = 'SELECT * from countries WHERE wp=?'
 
     # récupération de l'information (ou pas)
-    c.execute(sql,(country,))
+    c.execute(sql,(country))
     return c.fetchone()
    
 
 #
 # Ouverture d'une connexion avec la base de données
 #
-conn = sqlite3.connect('pays.sqlite')
+conn = sqlite3.connect('pays5.sqlite')
 
 # Pour accéder au résultat des requêtes sous forme d'un dictionnaire
 conn.row_factory = sqlite3.Row
@@ -223,4 +224,3 @@ conn.row_factory = sqlite3.Row
 # instanciation et lancement du serveur
 httpd = socketserver.TCPServer(("", 8080), RequestHandler)
 httpd.serve_forever()
-
