@@ -48,7 +48,12 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     # requete description - retourne la description du lieu dont on passe l'id en paramètre dans l'URL
     elif self.path_info[0] == "description":
-      self.send_json_country(self.path_info[0])
+      data=self.data_loc()
+      for c in data:
+        if c['wp'] == self.path_info[1]:
+           
+          self.send_json(c)
+          break
    
     # requête générique
     elif self.path_info[0] == "service":
@@ -231,7 +236,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 #
 # Ouverture d'une connexion avec la base de données
 #
-conn = sqlite3.connect('pays5.sqlite')
+conn = sqlite3.connect('pays.sqlite')
 
 # Pour accéder au résultat des requêtes sous forme d'un dictionnaire
 
@@ -240,6 +245,5 @@ conn.row_factory = sqlite3.Row
 
 
 # instanciation et lancement du serveur
-httpd = socketserver.TCPServer(("", 8060), RequestHandler)
+httpd = socketserver.TCPServer(("", 8046), RequestHandler)
 httpd.serve_forever()
-
