@@ -1,25 +1,26 @@
 ﻿/* fond de page */
 body {
-  background-image: linear-gradient(0deg, #fff,  #ff3232);
-  background-color: #ff3232;
+  background-image: linear-gradient(0deg, slateblue, black, black);
   background-size: 100%;
   background-repeat: no-repeat;
   color: white;
   height: 100vh;
   margin: 0;
   /* pour éviter l'ascenseur */
+  border: 1px solid transparent;
   box-sizing: border-box;
 }
 
 /* bandeau de titre */
 h1 { 
-  color: black;
+  color: white;
   border: none;
   box-shadow: none;
-  border-top: none;
-  border-bottom: none;
+  background-color: rgba(255,255,255,0.3);
+  border-top: 3px solid rgba(255,255,255,0.6);
+  border-bottom: 3px solid rgba(255,255,255,0.6);
   margin-top: 1.33em;
-  text-shadow: none;
+  text-shadow: 3px 3px 3px black;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   margin-bottom: 1.33em;
@@ -38,9 +39,4 @@ label span { display: inline-block; width: 5em; height: 1.5em; }
 a.delete:hover {
   color: red;
 }
-#map { height: 100%;
-  width: 75%;
-  float:right;
-  position:absolute;
-  right:0;
-  top:0;}
+#map { height: 400px; width: 600px; }
