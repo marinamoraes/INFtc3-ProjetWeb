@@ -1,15 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
 
-# In[23]:
-
-
-# -*- coding: utf-8 -*-
-"""
-A2b - Groupe B
-
-@author: Eduardo
-"""
 # BASE DE DONNEES
 import sqlite3
 import json    
@@ -19,7 +8,7 @@ import re
 
 
 # Ouverture d'une connexion avec la base de données
-conn = sqlite3.connect('pays0.sqlite',timeout=10)
+conn = sqlite3.connect('pays.sqlite',timeout=10)
 
 
 c = conn.cursor()
@@ -27,21 +16,16 @@ c = conn.cursor()
 c.execute('''CREATE TABLE "countries" (
 
     "wp"    TEXT NOT NULL UNIQUE,
-
     "name"    TEXT,
-
     "capital"    TEXT, 
     "leader title"   TEXT, 
     "leader name"    TEXT,
-    
     "latitude"    REAL,
-
     "longitude"    REAL,
-    "pib"   REAL,
     "superficie"    INTEGER,
     "population"    INTEGER,
     "flag"  TEXT,
-
+    
     
     PRIMARY KEY("wp")
 
@@ -67,7 +51,7 @@ def save_country(conn,info):
     
 # Préparation de la commande SQL
     c = conn.cursor()
-    sql = 'INSERT OR REPLACE INTO countries VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)'
+    sql = 'INSERT OR REPLACE INTO countries VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)'
 
 # Les infos à enregistrer
     common_name=get_common_name(info)
@@ -78,13 +62,13 @@ def save_country(conn,info):
     coords_dico=get_coords_dico(info)
     lat=coords_dico['lat']
     lon=coords_dico['lon']
-    pib=get_pib(info)
     superficie=get_superficie(info)
     population=get_population(info)
     flag=get_flag(info)
+    
      
 # Soumission de la commande (noter que le second argument est un tuple)
-    c.execute(sql,(common_name,long_name, capital,leader_title1,leader_name1,lat,lon,pib,superficie, population, flag))
+    c.execute(sql,(common_name,long_name, capital,leader_title1,leader_name1,lat,lon,superficie, population, flag))
     conn.commit()
 
 
@@ -97,9 +81,19 @@ def get_common_name(info):
 # Récupère le nom long du pays (il faut compléter à la main si la sortie soit 'None')
 def get_long_name(info):
     try:
-        return info['conventional_long_name']
+        long_name= info['conventional_long_name']
+        
     except KeyError:
         return "None"
+    if info['common_name']=='Kazakhstan':
+        long_name= 'Republic of Kazakhstan'
+    if info['common_name']=='Nepal':
+        long_name= 'Federal Democratic Republic of Nepal'
+    if info['common_name']=='Palestine':
+        long_name= 'State of Palestine'
+    if info['common_name']=='Sri Lanka':
+        long_name= 'Democratic Socialist Republic of Sri Lanka'
+    return long_name
 
 # Récupère le nom de la capital 
 def get_capital(info):
@@ -110,11 +104,35 @@ def get_capital(info):
             capital = m.group(1)    
         else:						# Si la capitale a un nom double, il faut corriger à la fin (ça ne marche pas)
             capital='None'			
-        return(capital) 
+         
         
     except KeyError:			# Si le pays n'a pas de capitale officielle (Palestine)
         return "None"
-
+    if info['common_name']=='Brunei':
+        capital='Bandar Seri Begawan'
+    if info['common_name']=='Cambodia':
+        capital='Phnom Penh'
+    if info['common_name']=='UAE':
+        capital='Abou Dabi'
+    if info['common_name']=='India':
+        capital= 'New Delhi'
+    if info['common_name']=='Kazakhstan':
+        capital= 'Astana'
+    if info['common_name']=='Kuwait':
+        capital='Kuwait'
+    if info['common_name']=='Malaysia':
+        capital= 'Kuala Lumpur'
+    if info['common_name']=='Oman':
+        capital= 'Mascate'
+    if info['common_name']=='Singapore':
+        capital= 'Singapore'
+    if info['common_name']=='Sri Lanka':
+        capital= 'Sri Jayawardenapura Kotte'
+    if info['common_name']=='Yemen':
+        capital= 'Sanaa'
+    return capital
+    
+    
 # Récupère le titre du leader
 def get_leader_title1(info):
     try:
@@ -122,10 +140,20 @@ def get_leader_title1(info):
         leader_title1 = leader_title1.replace('[','') # On enlève les crochets
         leader_title1 = leader_title1.replace(']','')
         leader_title1 = leader_title1.split('|') # On separe en deux parties (avant et après |)
-        return(leader_title1[0]) # On prend juste la première partie
+         # On prend juste la première partie
         # Exemple : '[[President of India|President]]' devient 'President of India'
+        
     except KeyError:
         return "None"
+    if info['common_name']=='Brunei':
+        leader_title1[0]= 'Sultan of Brunei'
+    if info['common_name']=='Qatar':
+        leader_title1[0]= 'Emir of Qatar'
+    if info['common_name']=='Jordan':
+        leader_title1[0]='King of Jordan'
+        
+    return leader_title1[0]
+
 
 # Récupère le nom du leader
 def get_leader_name1(info):
@@ -199,76 +227,40 @@ def cv_coords(str_coords):
         lon += float(c.pop(0))/3600
         c.pop(0)
     
+
+
+   
+
     # on renvoie un dictionnaire avec les deux valeurs
     return {'lat':lat, 'lon':lon }
-
+    
+    
+    
 # Récupère les coordonnées 
 def get_coords_dico(info):
     try:
         coords = info['coordinates']#[2:-2]
     except KeyError:						# Si le pays n'en a pas dans les données fournies, on les remplira à la main
-        return {'lat':0, 'lon':0}
+        if info['common_name']=='Malaysia':
+            lat=3+9/60+20/3600
+            lon=101+41/60+49/3600
+        if info['common_name']=='Maldives':
+            lat=4+10/60+29/3600
+            lon=73+30/60+35/3600
+        if info['common_name']=='Palestine':
+            lat=31+47/60
+            lon=35+14/60
+        if info['common_name']=='the Philippines':
+            lat=14+35/60
+            lon=120+58/60
+        if info['common_name']=='Yemen':
+            lat=15+21/60+11/3600
+            lon=44+12/60+54/3600
+        return {'lat':lat, 'lon':lon }
+        
     
     return cv_coords(coords)
 
-# Récupère les coordonnées en chaîne de caractères (non affiché dans la base de données finalement) 
-def get_coords_str(info):
-    try:
-        coords = info['coordinates']
-    except:
-        coords={'lat':0, 'lon':0}
-    c = coords.split('|')[1:-1]
-    if len(c)==8:
-        return c[0]+'°'+c[1]+"'"+ c[2]+"'"+c[3]+' '+c[4]+'°'+c[5]+"'"+ c[6]+"'"+c[7]
-    elif len(c)==6:
-        return c[0]+'°'+c[1]+"'"+ c[2]+' '+c[3]+'°'+c[4]+"'"+c[5]
-    else :
-        return None
-
-# Récupère le PIB total du pays
-# Les PIB étaient souvent donnés avec des caractères et phrases non voulues, il a fallu extraire les valeurs
-def get_pib(info):
-    string = info['GDP_PPP']
-    if string[0] == '{':
-        liste = string.split('|')
-        
-        for i in liste :
-            if i[0]== '$':
-                string = i
-    
-        
-    if 'billion' in string :
-        
-        rendu = ''
-        for i in string :
-            if i == '.':
-                rendu += i
-            try :
-                nombre = int(i)
-                rendu += i    
-            except ValueError :
-                pass
-        try :
-            rendu = float(rendu)*1e9
-            return int(rendu)
-        except ValueError :
-            return 0
-    
-    if 'trillion' in string :
-        rendu = ''
-        for i in string :
-            if i == '.':
-                rendu += i
-            try :
-                nombre = int(i)
-                rendu += i    
-            except ValueError :
-                pass
-        try :
-            rendu = float(rendu)*1e12
-            return int(rendu)
-        except ValueError :
-            return 0
 
 # Récupère la superficie du pays
 def get_superficie(info):
@@ -317,6 +309,9 @@ def get_flag(info):
     country=info['common_name']
     flag='{}-150x100.png'.format(info['common_name'])
     return flag
+    
+
+
 
 # Pour accéder au résultat des requêtes sous forme d'un dictionnaire
 conn.row_factory = sqlite3.Row
@@ -334,14 +329,6 @@ for pays in liste_pays[:]:   #pays est par ex "China.json"
     save_country(conn,info)	# On enregistre le pays et ses attributs dans la base de données
     
 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
 
 
 
