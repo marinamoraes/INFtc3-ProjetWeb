@@ -1,4 +1,3 @@
-
 # BASE DE DONNEES
 import sqlite3
 import json    
@@ -8,7 +7,7 @@ import re
 
 
 # Ouverture d'une connexion avec la base de données
-conn = sqlite3.connect('pays.sqlite',timeout=10)
+conn = sqlite3.connect('pays16.sqlite',timeout=10)
 
 
 c = conn.cursor()
@@ -18,8 +17,8 @@ c.execute('''CREATE TABLE "countries" (
     "wp"    TEXT NOT NULL UNIQUE,
     "name"    TEXT,
     "capital"    TEXT, 
-    "leader title"   TEXT, 
-    "leader name"    TEXT,
+    "leader_title"   TEXT, 
+    "leader_name"    TEXT,
     "latitude"    REAL,
     "longitude"    REAL,
     "superficie"    INTEGER,
@@ -84,7 +83,7 @@ def get_long_name(info):
         long_name= info['conventional_long_name']
         
     except KeyError:
-        return "None"
+        return "Republic of Singapore"
     if info['common_name']=='Kazakhstan':
         long_name= 'Republic of Kazakhstan'
     if info['common_name']=='Nepal':
@@ -268,7 +267,7 @@ def get_superficie(info):
     return info.replace(',',"")
 
 # Récupère la population du pays
-def get_population(info):
+def get_population(info): 
     try :
         population = info['population_census']
     except:
@@ -284,10 +283,12 @@ def get_population(info):
         population='3,713,804'
     if info['common_name']=='Iraq':
         population='38,872,655'
-    if info['common_name']=='Kazakhtan':
+    if info['common_name']=='Kazakhstan':
         population='18,448,600'
     if info['common_name']=='Lebanon':
         population='5,469,612'
+    if info['common_name']=='Myanmar':
+        population='53,582,855 '
     if info['common_name']=='Pakistan':
         population='212,742,631'
     if info['common_name']=='Russia':
@@ -328,8 +329,3 @@ for pays in liste_pays[:]:   #pays est par ex "China.json"
     info=get_info(pays)		# On récupère l'infobox
     save_country(conn,info)	# On enregistre le pays et ses attributs dans la base de données
     
-
-
-
-
-
