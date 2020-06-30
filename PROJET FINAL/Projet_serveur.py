@@ -332,5 +332,5 @@ conn.row_factory = sqlite3.Row
 
 # instanciation et lancement du serveur
 
-httpd = socketserver.TCPServer(("", 8121), RequestHandler)
+httpd = socketserver.TCPServer(("", 8080), RequestHandler)
 httpd.serve_forever()
