@@ -18,11 +18,11 @@ h1 {
   box-shadow: none;
   border-top: none;
   border-bottom: none;
-  margin-top: 1.33em;
+  margin-top: none;
   text-shadow: none;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  margin-bottom: 1.33em;
+  padding-top: none;
+  padding-bottom: none;
+  margin-bottom: none;
 }
 
 label {

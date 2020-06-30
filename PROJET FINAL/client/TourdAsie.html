@@ -20,6 +20,9 @@
 	<label><span>Pays :</span><input id="pays" name="pays"></label>
 	<label><span> </span> <button id="bouton">Fiche</button></label>
 	</div>
+
+	
+	<hr>
 	<div id="country_data">
 	 <h1 id="country_name"></h1>
 	 <div><span class="label">Capital:</span><span class="value" id="capital"></span></div>
@@ -33,6 +36,21 @@
 	</br>
 	<img id="flag">
 	</div>
+
+    
+	<hr>
+	<h1>Top 3 des pays:</h1>
+
+		<div>
+		  <SELECT ID="attributs" onchange="fonc()">
+		  <OPTION> # </OPTION>
+		  <OPTION> les plus au Nord </OPTION>
+		  <OPTION> # </OPTION>
+		  </SELECT>
+		  <p id="attribut"></p>
+		</div>
+	
+	
     <!-- Zone pour l'insertion de la carte OSM via Leaflet -->
 	<div id="map" style="margin-bottom:2em"></div> 
  
@@ -67,7 +85,7 @@ function load_data () {
       // attachement d'une popup, capture de l'événement 'clic'
       // ajout d'une propriété personnalisée au marqueur
       L.marker([data[n].lat,data[n].lon]).addTo(map)
-       .bindPopup('Lieu = '+data[n].name)
+       .bindPopup(data[n].name)
        .addEventListener('click',OnMarkerClick)
        .wpnom = data[n].wp;
     }
@@ -96,7 +114,7 @@ function OnMarkerClick (e) {
        window.capital.textContent = data.capital;
        window.latitude.textContent = data.latitude.toFixed(3);
        window.longitude.textContent = data.longitude.toFixed(3);
-	   window.superficie.textContent = data.superficie;
+	   window.superficie.textContent = data.superficie + " km²";
 	   window.title.textContent = data.leader_title;
 	   window.leader.textContent = data.leader_name;
 	   window.population.textContent = data.population;
@@ -139,19 +157,22 @@ function envoiformulaire(e) {
        window.capital.textContent = data.capital;
        window.latitude.textContent = data.latitude.toFixed(3);
        window.longitude.textContent = data.longitude.toFixed(3);
-	   window.superficie.textContent = data.superficie;
+	   window.superficie.textContent = data.superficie + " km²";
 	   window.population.textContent = data.population;
 	   window.title.textContent = data.leader_title;
 	   window.leader.textContent = data.leader_name;
 	   window.flag.src = "flags/" + data.flag;
 
      }
+	
+
      // affichage d'un message d'erreur
      else {
         window.country_data.style.display = 'none';
         window.error_msg.innerHTML = this.statusText;
      }
-  };
+
+  OnMarkerClick (e)};
   xhr.send();
 }
 </script>

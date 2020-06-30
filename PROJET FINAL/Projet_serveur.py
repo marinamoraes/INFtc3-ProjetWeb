@@ -23,12 +23,9 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
   def do_GET(self):
     self.init_params()
 
-    # le chemin d'accès commence par /country et se poursuit par un nom de pays
-    if self.path_info[0] == 'country' and len(self.path_info) > 1:
-      self.send_country(self.path_info[1])
 
     # le chemin d'accès commence par /service/country/...
-    elif self.path_info[0] == 'service' and self.path_info[1] == 'country' and len(self.path_info) > 2:
+    if self.path_info[0] == 'service' and self.path_info[1] == 'country' and len(self.path_info) > 2:
       self.send_json_country(self.path_info[2])
    
 
@@ -139,35 +136,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
   
 
   #
-  # On renvoie les informations d'un pays
-  def send_country(self,country):
-
-    # on récupère le pays depuis la base de données
-    r = self.db_get_country(country)
-
-    # on n'a pas trouvé le pays demandé
-    if r == None:
-      self.send_error(404,'Country not found')
-
-    # on génère un document au format html
-    else:
-      body = '<!DOCTYPE html>\n<meta charset="utf-8">\n'
-      body += '<title>{}</title>'.format(country)
-      body += '<link rel="stylesheet" href="/TD2-s8.css">'
-      body += '<main>'
-      body += '<h1>{}</h1>'.format(r['name'])
-      body += '<ul>'
-      body += '<li>{}: {}</li>'.format('Capital',r['capital'])
-      body += '<li>{}: {:.3f}</li>'.format('Latitude',r['latitude'])
-      body += '<li>{}: {:.3f}</li>'.format('Longitude',r['longitude'])
-      body += '</ul>'
-      body += '</main>'
-
-      # on envoie la réponse
-      headers = [('Content-Type','text/html;charset=utf-8')]
-      self.send(body,headers)
-
-  #
   # On renvoie les informations d'un pays au format json
   #
   def send_json_country(self,country):
@@ -201,16 +169,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         lat = i['latitude']
         lon = i['longitude']
         name = i['name']
-        continent = 'Asie'
-        capital = i['capital']
-        leadern = i['leader_name']
-        leadert = i['leader_title']
-        superficie = i['superficie']
-        pop = i['population']
-        flag = i['flag']
-        data.append({'wp': wp, 'lat': lat, 'lon': lon, 'name': name, 'continent': continent, 'capital': capital, 
-                     'leader_name' : leadern, 'leader_title' : leadert, 'superficie' : superficie, 'population' : pop,
-                     'flag' : flag})
+        data.append({'wp': wp, 'lat': lat, 'lon': lon, 'name': name})
     print(data)
     return data
 
@@ -240,5 +199,5 @@ conn.row_factory = sqlite3.Row
 
 
 # instanciation et lancement du serveur
-httpd = socketserver.TCPServer(("", 8011), RequestHandler)
+httpd = socketserver.TCPServer(("", 8005), RequestHandler)
 httpd.serve_forever()
