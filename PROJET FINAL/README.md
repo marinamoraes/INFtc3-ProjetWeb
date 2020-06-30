@@ -22,6 +22,7 @@ Instructions pour démarrer l'application :
 Fonctionnement de l'application : 
 
 L'application web affiche des pointeurs sur chaque capitale des pays d'Asie. Il est possible en appuyant sur un des pointeurs de faire apparaître à gauche de l'écran les informations du pays concerné, et en tapant le nom d'un pays dans la barre de recherche, d'obtenir aussi ses informations. Si vous utilisez la barre de recherche, veillez à écrire le nom anglais du pays.
+Il est aussi possible d'afficher des classements entre les pays, comme par exemple le classement des 5 pays les plus au Nord, ...
 
 
 
