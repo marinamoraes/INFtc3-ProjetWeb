@@ -7,7 +7,7 @@ import re
 
 
 # Ouverture d'une connexion avec la base de données
-conn = sqlite3.connect('pays16.sqlite',timeout=10)
+conn = sqlite3.connect('pays.sqlite',timeout=10)
 
 
 c = conn.cursor()
