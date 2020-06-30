@@ -23,6 +23,15 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
   def do_GET(self):
     self.init_params()
 
+    # le chemin d'accès commence par /country et se poursuit par un nom de pays
+    if self.path_info[0] == 'country' and len(self.path_info) > 1:
+      self.send_country(self.path_info[1])
+
+    # le chemin d'accès commence par /service/country/...
+    elif self.path_info[0] == 'service' and self.path_info[1] == 'country' and len(self.path_info) > 2:
+      self.send_json_country(self.path_info[2])
+   
+
     # requete location - retourne la liste de lieux et leurs coordonnées géogrpahiques
     if self.path_info[0] == "location":
       data=self.data_loc()
@@ -30,9 +39,9 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     # requete description - retourne la description du lieu dont on passe l'id en paramètre dans l'URL
     elif self.path_info[0] == "description":
-      self.send_json_country(self.path_info[1])
-     
+          self.send_json_country(self.path_info[1])
 
+   
     # requête générique
     elif self.path_info[0] == "service":
       self.send_html('<p>Path info : <code>{}</p><p>Chaîne de requête : <code>{}</code></p>'           .format('/'.join(self.path_info),self.query_string));
@@ -46,7 +55,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       self.send_static()
 
 
-  # méthode pour traiter les requêtes POST - non utilisée dans l'exemple
+  # méthode pour traiter les requêtes POST 
   def do_POST(self):
     self.init_params()
 
@@ -148,7 +157,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       body += '<main>'
       body += '<h1>{}</h1>'.format(r['name'])
       body += '<ul>'
-      body += '<li>{}: {}</li>'.format('Continent',r['continent'].capitalize())
       body += '<li>{}: {}</li>'.format('Capital',r['capital'])
       body += '<li>{}: {:.3f}</li>'.format('Latitude',r['latitude'])
       body += '<li>{}: {:.3f}</li>'.format('Longitude',r['longitude'])
@@ -175,6 +183,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     else:
       data = {k:r[k] for k in r.keys()}
       json_data = json.dumps(data, indent=4)
+      print(data)
       headers = [('Content-Type','application/json')]
       self.send(json_data,headers)
 
@@ -194,7 +203,15 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         name = i['name']
         continent = 'Asie'
         capital = i['capital']
-        data.append({'wp': wp, 'lat': lat, 'lon': lon, 'name': name, 'continent': continent, 'capital': capital})
+        leadern = i['leader_name']
+        leadert = i['leader_title']
+        superficie = i['superficie']
+        pop = i['population']
+        flag = i['flag']
+        data.append({'wp': wp, 'lat': lat, 'lon': lon, 'name': name, 'continent': continent, 'capital': capital, 
+                     'leader_name' : leadern, 'leader_title' : leadert, 'superficie' : superficie, 'population' : pop,
+                     'flag' : flag})
+    print(data)
     return data
 
 
@@ -207,20 +224,21 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     sql = 'SELECT * from countries WHERE wp=?'
 
     # récupération de l'information (ou pas)
-    c.execute(sql,(country))
+    c.execute(sql,(country,))
     return c.fetchone()
    
 
 #
 # Ouverture d'une connexion avec la base de données
 #
-conn = sqlite3.connect('pays5.sqlite')
+conn = sqlite3.connect('pays.sqlite')
 
 # Pour accéder au résultat des requêtes sous forme d'un dictionnaire
+
+
 conn.row_factory = sqlite3.Row
 
 
-
 # instanciation et lancement du serveur
-httpd = socketserver.TCPServer(("", 8080), RequestHandler)
+httpd = socketserver.TCPServer(("", 8011), RequestHandler)
 httpd.serve_forever()

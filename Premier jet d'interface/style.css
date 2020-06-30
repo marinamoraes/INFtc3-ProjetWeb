@@ -25,6 +25,20 @@ h1 {
   margin-bottom: 1.33em;
 }
 
+label {
+  display: block;
+  padding-bottom: 0.5em;
+}
+label span {
+  display: inline-block;
+  width : 3em;
+}
+.label {
+  display: inline-block;
+  width : 7em;
+}
+
+
 /* contenu de la page */
 body > * {   padding-left: 10px; }
 
@@ -39,7 +53,7 @@ a.delete:hover {
   color: red;
 }
 #map { height: 100%;
-  width: 75%;
+  width: 62%;
   float:right;
   position:absolute;
   right:0;
