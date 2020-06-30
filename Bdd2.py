@@ -308,7 +308,7 @@ def get_population(info):
 
 def get_flag(info):
     country=info['common_name']
-    flag='{}-150x100.png'.format(info['common_name'])
+    flag='{}.png'.format(info['common_name'])
     return flag
     
 
