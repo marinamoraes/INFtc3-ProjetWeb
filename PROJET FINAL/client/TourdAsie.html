@@ -1,0 +1,159 @@
+<!DOCTYPE html>  
+
+<meta charset='utf-8'>
+
+<main>
+
+<script src="leaflet.js"> // Bibliothèque Leaflet : http://leafletjs.com/ </script>
+
+<link rel="stylesheet" type="text/css" href="leaflet.css" /> 
+<link rel="stylesheet" type="text/css" href="style.css"/>
+
+<meta charset="utf-8">
+  
+
+<body onload="load_data();">
+
+	<h1> <font size="8" face="time" color="black">Tour de l'Asie</font></h1>
+  
+	<div>
+	<label><span>Pays :</span><input id="pays" name="pays"></label>
+	<label><span> </span> <button id="bouton">Fiche</button></label>
+	</div>
+	<div id="country_data">
+	 <h1 id="country_name"></h1>
+	 <div><span class="label">Capital:</span><span class="value" id="capital"></span></div>
+	 <div><span class="label">Latitude:</span><span class="value" id="latitude"></span></div>
+	 <div><span class="label">Longitude:</span><span class="value" id="longitude"></span></div>
+	 <div><span class="label">Dirigeant:</span><span class="value" id="leader"></span></div>
+	 <div><span class="label">Titre:</span><span class="value" id="title"></span></div>
+	 <div><span class="label">Superficie:</span><span class="value" id="superficie"></span></div>
+	 <div><span class="label">Population:</span><span class="value" id="population"></span></div>
+	<div id="error_msg"></div>
+	</br>
+	<img id="flag">
+	</div>
+    <!-- Zone pour l'insertion de la carte OSM via Leaflet -->
+	<div id="map" style="margin-bottom:2em"></div> 
+ 
+</body>
+<script>
+
+// Création d'une carte dans la balise div "map",
+// et position de la vue sur un point donné et un niveau de zoom
+var map = L.map('map').setView([45.775,84.83], 3);
+
+// Ajout d'une couche de dalles OpenStreetMap
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+     }).addTo(map);
+
+// Fonction appelée au chargement de la page
+function load_data () {
+
+  // objet pour l'envoi d'une requête Ajax
+  var xhr = new XMLHttpRequest();
+
+  // fonction appelée lorsque la réponse à la requête (liste des lieux insolites) sera arrivée
+  xhr.onload = function() {
+
+    // transformation des données renvoyées par le serveur
+    // responseText est du type string, data est une liste
+    var data = JSON.parse(this.responseText);
+
+    // boucle sur les lieux
+    for ( n = 0; n < data.length; n++ ) {
+      // insertion d'un marqueur à la position du lieu,
+      // attachement d'une popup, capture de l'événement 'clic'
+      // ajout d'une propriété personnalisée au marqueur
+      L.marker([data[n].lat,data[n].lon]).addTo(map)
+       .bindPopup('Lieu = '+data[n].name)
+       .addEventListener('click',OnMarkerClick)
+       .wpnom = data[n].wp;
+    }
+  };
+
+  // Envoi de la requête Ajax pour la récupération de la liste des lieux insolites
+  xhr.open('GET','/location',true);
+  xhr.send();
+}
+
+// Fonction appelée lors d'un clic sur un marqueur
+function OnMarkerClick (e) {
+
+   // objet pour l'envoi d'une requête Ajax
+  var xhr = new XMLHttpRequest();
+
+  // fonction appelée lorsque la réponse à la requête (description d'un lieu insolite) sera arrivée
+  xhr.onload = function() {
+
+        // récupération des informations au format json
+     if ( this.status == 200 ) {
+       var data = JSON.parse(this.responseText);
+       window.error_msg.innerHTML = ''
+       window.country_data.style.display = 'block';
+       window.country_name.textContent = data.name;
+       window.capital.textContent = data.capital;
+       window.latitude.textContent = data.latitude.toFixed(3);
+       window.longitude.textContent = data.longitude.toFixed(3);
+	   window.superficie.textContent = data.superficie;
+	   window.title.textContent = data.leader_title;
+	   window.leader.textContent = data.leader_name;
+	   window.population.textContent = data.population;
+	   window.flag.src = "flags/"+data.flag;
+     }
+    // affichage dans la zone 'description' du nom (reprise dans le popup)
+    // et de la description récupérée par l'appel au serveur
+    description.innerHTML =  '<b><i>' + e.target.getPopup().getContent() + '</i></b><br>'+ data.desc;
+  };
+
+  // Le numéro du lieu est récupéré via la propriété personnalisée du marqueur
+  var wpnom = e.target.wpnom
+
+  // Envoi de la requête Ajax pour la récupération de la description du lieu de numéro wpnom
+  xhr.open('GET','/description/'+wpnom,true);
+  xhr.send();
+}
+
+document.getElementById('bouton').addEventListener('click', envoiformulaire);
+window.country_data.style.display = 'none';
+
+function envoiformulaire(e) {
+   var xhr = new XMLHttpRequest(); 
+
+   // on récupère le nom du pays
+   var ps = window.pays.value;
+
+   // requête au serveur
+   xhr.open('GET','/service/country/'+ps,true);
+  
+   // fonction callback
+   xhr.onload = function() {
+
+     // récupération des informations au format json
+     if ( this.status == 200 ) {
+       var data = JSON.parse(this.responseText);
+       window.error_msg.innerHTML = ''
+       window.country_data.style.display = 'block';
+       window.country_name.textContent = data.name;
+       window.capital.textContent = data.capital;
+       window.latitude.textContent = data.latitude.toFixed(3);
+       window.longitude.textContent = data.longitude.toFixed(3);
+	   window.superficie.textContent = data.superficie;
+	   window.population.textContent = data.population;
+	   window.title.textContent = data.leader_title;
+	   window.leader.textContent = data.leader_name;
+	   window.flag.src = "flags/" + data.flag;
+
+     }
+     // affichage d'un message d'erreur
+     else {
+        window.country_data.style.display = 'none';
+        window.error_msg.innerHTML = this.statusText;
+     }
+  };
+  xhr.send();
+}
+</script>
+</main>
+

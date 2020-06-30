@@ -1,0 +1,60 @@
+﻿/* fond de page */
+body {
+  background-image: linear-gradient(0deg, #fff,  #ff3232);
+  background-color: #ff3232;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100vh;
+  margin: 0;
+  /* pour éviter l'ascenseur */
+  box-sizing: border-box;
+}
+
+/* bandeau de titre */
+h1 { 
+  color: black;
+  border: none;
+  box-shadow: none;
+  border-top: none;
+  border-bottom: none;
+  margin-top: 1.33em;
+  text-shadow: none;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1.33em;
+}
+
+label {
+  display: block;
+  padding-bottom: 0.5em;
+}
+label span {
+  display: inline-block;
+  width : 3em;
+}
+.label {
+  display: inline-block;
+  width : 7em;
+}
+
+
+/* contenu de la page */
+body > * {   padding-left: 10px; }
+
+/* polices de caractères */
+body { font-family: Trebuchet MS, sans-serif; }
+
+/* positionnement des champs */
+label { display: block; }
+label span { display: inline-block; width: 5em; height: 1.5em; }
+
+a.delete:hover {
+  color: red;
+}
+#map { height: 100%;
+  width: 62%;
+  float:right;
+  position:absolute;
+  right:0;
+  top:0;}
