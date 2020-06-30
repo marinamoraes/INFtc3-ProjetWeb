@@ -63,14 +63,24 @@
 </body>
 <script>
 
+
+
 // Création d'une carte dans la balise div "map",
 // et position de la vue sur un point donné et un niveau de zoom
 var map = L.map('map').setView([45.775,84.83], 3);
+
+
 
 // Ajout d'une couche de dalles OpenStreetMap
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
      }).addTo(map);
+
+
+
+
+
+
 
 // Fonction appelée au chargement de la page
 function load_data () {
@@ -78,7 +88,7 @@ function load_data () {
   // objet pour l'envoi d'une requête Ajax
   var xhr = new XMLHttpRequest();
 
-  // fonction appelée lorsque la réponse à la requête (liste des lieux insolites) sera arrivée
+  // fonction appelée lorsque la réponse à la requête (location) sera arrivée
   xhr.onload = function() {
 
     // transformation des données renvoyées par le serveur
@@ -97,10 +107,15 @@ function load_data () {
     }
   };
 
-  // Envoi de la requête Ajax pour la récupération de la liste des lieux insolites
+  // Envoi de la requête Ajax pour la récupération de la liste des coordonnées des pays
   xhr.open('GET','/location',true);
   xhr.send();
 }
+
+
+
+
+
 
 // Fonction appelée lors d'un clic sur un marqueur
 function OnMarkerClick (e) {
@@ -108,7 +123,7 @@ function OnMarkerClick (e) {
    // objet pour l'envoi d'une requête Ajax
   var xhr = new XMLHttpRequest();
 
-  // fonction appelée lorsque la réponse à la requête (description d'un lieu insolite) sera arrivée
+  // fonction appelée lorsque la réponse à la requête (description) sera arrivée
   xhr.onload = function() {
 
         // récupération des informations au format json
@@ -138,6 +153,14 @@ function OnMarkerClick (e) {
   xhr.open('GET','/description/'+wpnom,true);
   xhr.send();
 }
+
+
+
+
+
+
+
+//recherche de pays par formulaire
 
 document.getElementById('bouton').addEventListener('click', envoiformulaire);
 window.country_data.style.display = 'none';
@@ -187,9 +210,15 @@ function envoiformulaire(e) {
 
 
 
+
+
+//clique sur les options du panneau roulant
 function top5() {
   var index = document.getElementById("attributs").selectedIndex;
-  //1er cas: clic sur 'pib'
+  
+  
+  
+  //pays les + au Nord
   if (index==1) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -203,6 +232,10 @@ function top5() {
     xhr.send(); 
   }
   
+  
+  
+  
+   //pays les + au Sud
   if (index==2) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -216,6 +249,11 @@ function top5() {
     xhr.send(); 
   }
   
+  
+  
+  
+  
+   //pays les + à l'Ouest
   if (index==3) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -229,6 +267,10 @@ function top5() {
     xhr.send(); 
   }
   
+  
+  
+  
+  //pays les + à l'Est
   if (index==4) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -242,6 +284,10 @@ function top5() {
     xhr.send(); 
   }
   
+  
+  
+  
+   //pays les + peuplés
   if (index==5) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -254,6 +300,12 @@ function top5() {
     xhr.open('GET','/populated',true);
     xhr.send(); 
   }
+  
+  
+  
+  
+  
+   //pays les - peuplés 
   if (index==6) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -267,6 +319,11 @@ function top5() {
     xhr.send(); 
   }
   
+  
+  
+  
+  
+ //pays les + grands
   if (index==7) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -280,6 +337,11 @@ function top5() {
     xhr.send(); 
   }
   
+  
+  
+  
+  
+ //pays les - grands
   if (index==8) {
   	// objet pour l'envoi d'une requête Ajax
     var xhr = new XMLHttpRequest();
@@ -293,21 +355,8 @@ function top5() {
     xhr.send(); 
   }
 
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </script>
