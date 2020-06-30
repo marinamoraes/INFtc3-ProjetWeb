@@ -263,8 +263,12 @@ def get_coords_dico(info):
 
 # Récupère la superficie du pays
 def get_superficie(info):
-    info=info['area_km2']
-    return info.replace(',',"")
+    area=info['area_km2']
+    if info['common_name']=='Israel':
+        area='20,770'
+    
+    return area.replace(',',"")
+    
 
 # Récupère la population du pays
 def get_population(info): 
