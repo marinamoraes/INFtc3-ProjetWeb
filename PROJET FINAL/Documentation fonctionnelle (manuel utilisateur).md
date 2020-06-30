@@ -14,5 +14,5 @@ Fonctionnalités supplémentaires :
 
 - L'application permet d'accéder aux données relatives à un pays sans cliquer sur un POI, simplement en tapant son nom dans la barre de recherche, puis en appuyant sur le bouton Fiche.
 
-- L'application permet aussi d'afficher des classements entre les pays, par exemple le Top 5 des pays les plus au Nord, des pays les plus au Sud, des pays les plus peuplés,...
+- L'application permet aussi d'afficher des classements entre les pays, par exemple le Top 5 des pays les plus au Nord, des pays les plus au Sud, à l'Est, à l'Ouest, des pays les plus peuplés,...
 
