@@ -275,7 +275,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
 
   
-
+#formation d'une liste de dictionnaires par pays à partir de la BDD
   def data_all(self):
     c = conn.cursor()
     sql = 'SELECT * from countries'
@@ -300,7 +300,7 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     return data
 
-  
+  #utile pour l'attribut 'population' d'un pays
   def conversion(self,popu):
       new=''
       for l in popu:
