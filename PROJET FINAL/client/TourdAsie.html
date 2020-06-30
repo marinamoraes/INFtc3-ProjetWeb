@@ -48,7 +48,10 @@
 		  <OPTION> les plus au Sud </OPTION>
 		  <OPTION> les plus à l'Ouest</OPTION>
 		  <OPTION> les plus à l'Est </OPTION>
-		  <OPTION> les plus à peuplés </OPTION>
+		  <OPTION> les plus peuplés </OPTION>
+		  <OPTION> les moins peuplés </OPTION>
+		  <OPTION> les plus grands </OPTION>
+		  <OPTION> les plus petits </OPTION>
 		  </SELECT>
 		  <p id="attribut"></p>
 		</div>
@@ -251,6 +254,45 @@ function top5() {
     xhr.open('GET','/populated',true);
     xhr.send(); 
   }
+  if (index==6) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+       attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/leastpopulated',true);
+    xhr.send(); 
+  }
+  
+  if (index==7) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+       attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/big',true);
+    xhr.send(); 
+  }
+  
+  if (index==8) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+       attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/small',true);
+    xhr.send(); 
+  }
+
 }
 
 

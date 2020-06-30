@@ -100,6 +100,51 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                     datan[i-1]=c
       self.send_json(datan)
       
+      #requete leastpopulated
+    if self.path_info[0] == 'leastpopulated':
+      data=self.data_all()
+      listepop=[]
+      for c in data:
+          listepop.append(self.conversion(c['population']))
+      listepop.sort()
+      print(listepop)
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(0,5):
+                if self.conversion(c['population']) == listepop[i]:
+                    datan[i]=c
+      self.send_json(datan)
+      
+      #requete big
+    if self.path_info[0] == 'big':
+      data=self.data_all()
+      listesup=[]
+      for c in data:
+          listesup.append(int(c['superficie']))
+      listesup.sort()
+      print(listesup)
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(1,6):
+                if int(c['superficie']) == listesup[-i]:
+                    datan[i-1]=c
+      self.send_json(datan)
+      
+      #requete small
+    if self.path_info[0] == 'small':
+      data=self.data_all()
+      listesup=[]
+      for c in data:
+          listesup.append(int(c['superficie']))
+      listesup.sort()
+      print(listesup)
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(0,5):
+                if int(c['superficie']) == listesup[i]:
+                    datan[i]=c
+      self.send_json(datan)
+      
    
 
     # requete location - retourne la liste de lieux et leurs coordonnées géogrpahiques
@@ -286,5 +331,6 @@ conn.row_factory = sqlite3.Row
 
 
 # instanciation et lancement du serveur
-httpd = socketserver.TCPServer(("", 8080), RequestHandler)
+
+httpd = socketserver.TCPServer(("", 8115), RequestHandler)
 httpd.serve_forever()
