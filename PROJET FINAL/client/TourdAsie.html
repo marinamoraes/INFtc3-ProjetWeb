@@ -2,7 +2,7 @@
 
 <meta charset='utf-8'>
 
-<main>
+
 
 <script src="leaflet.js"> // Bibliothèque Leaflet : http://leafletjs.com/ </script>
 
@@ -39,13 +39,16 @@
 
     
 	<hr>
-	<h1>Top 3 des pays:</h1>
+	<h1>Top 5 des pays:</h1>
 
 		<div>
-		  <SELECT ID="attributs" onchange="top()">
+		  <SELECT ID="attributs" onchange="top5()">
 		  <OPTION> # </OPTION>
 		  <OPTION> les plus au Nord </OPTION>
-		  <OPTION> # </OPTION>
+		  <OPTION> les plus au Sud </OPTION>
+		  <OPTION> les plus à l'Ouest</OPTION>
+		  <OPTION> les plus à l'Est </OPTION>
+		  <OPTION> les plus à peuplés </OPTION>
 		  </SELECT>
 		  <p id="attribut"></p>
 		</div>
@@ -151,7 +154,7 @@ function envoiformulaire(e) {
      // récupération des informations au format json
      if ( this.status == 200 ) {
        var data = JSON.parse(this.responseText);
-       window.error_msg.innerHTML = 'Pays introuvable'
+       window.error_msg.innerHTML = ''
        window.country_data.style.display = 'block';
        window.country_name.textContent = data.name;
        window.capital.textContent = data.capital;
@@ -181,7 +184,74 @@ function envoiformulaire(e) {
 
 
 
+function top5() {
+  var index = document.getElementById("attributs").selectedIndex;
+  //1er cas: clic sur 'pib'
+  if (index==1) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
 
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+      attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/north',true);
+    xhr.send(); 
+  }
+  
+  if (index==2) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+       attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/south',true);
+    xhr.send(); 
+  }
+  
+  if (index==3) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+       attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/west',true);
+    xhr.send(); 
+  }
+  
+  if (index==4) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+       attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/east',true);
+    xhr.send(); 
+  }
+  
+  if (index==5) {
+  	// objet pour l'envoi d'une requête Ajax
+    var xhr = new XMLHttpRequest();
+
+    xhr.onload = function() {
+      var data = JSON.parse(this.responseText);
+       attribut.innerHTML= "1." + data[0].name + "<br>2." + data[1].name + "<br>3." + data[2].name +  "<br>4." + data[3].name + "<br>5." + data[4].name;
+    }
+    // Envoi de la requête Ajax
+    xhr.open('GET','/populated',true);
+    xhr.send(); 
+  }
+}
 
 
 
@@ -199,5 +269,5 @@ function envoiformulaire(e) {
 
 
 </script>
-</main>
+
 

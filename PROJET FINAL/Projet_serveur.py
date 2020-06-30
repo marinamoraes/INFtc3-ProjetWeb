@@ -28,12 +28,78 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
     if self.path_info[0] == 'service' and self.path_info[1] == 'country' and len(self.path_info) > 2:
       self.send_json_country(self.path_info[2])
    
-    # le chemin d'accès commence par /service/country/...
-    if self.path_info[0] == 'top' and self.path_info[1] == 'north':
+    #requete north
+    if self.path_info[0] == 'north':
       data=self.data_all()
+      listelatitude=[]
       for c in data:
-          print(c)
+          listelatitude.append(c['lat'])
+      listelatitude.sort()
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(1,6):
+                if c['lat'] == listelatitude[-i]:
+                    datan[i-1]=c
+      self.send_json(datan)
+      
+    #requete south
+    if self.path_info[0] == 'south':
+      data=self.data_all()
+      listelatitude=[]
+      for c in data:
+          listelatitude.append(c['lat'])
+      listelatitude.sort()
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(0,5):
+                if c['lat'] == listelatitude[i]:
+                    datan[i]=c
+      self.send_json(datan)
+      
+      #requete west
+    if self.path_info[0] == 'west':
+      data=self.data_all()
+      listelon=[]
+      for c in data:
+          listelon.append(c['lon'])
+      listelon.sort()
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(0,5):
+                if c['lon'] == listelon[i]:
+                    datan[i]=c
+      self.send_json(datan)
 
+    #requete east
+    if self.path_info[0] == 'east':
+      data=self.data_all()
+      listelon=[]
+      for c in data:
+          listelon.append(c['lon'])
+      listelon.sort()
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(1,6):
+                if c['lon'] == listelon[-i]:
+                    datan[i-1]=c
+      self.send_json(datan)
+      
+    
+    #requete populated
+    if self.path_info[0] == 'populated':
+      data=self.data_all()
+      listepop=[]
+      for c in data:
+          listepop.append(self.conversion(c['population']))
+      listepop.sort()
+      print(listepop)
+      datan=[{},{},{},{},{}]
+      for c in data:
+          for i in range(1,6):
+                if self.conversion(c['population']) == listepop[-i]:
+                    datan[i-1]=c
+      self.send_json(datan)
+      
    
 
     # requete location - retourne la liste de lieux et leurs coordonnées géogrpahiques
@@ -189,9 +255,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
     return data
 
-
-
-  #
+  
+  def conversion(self,popu):
+      new=''
+      for l in popu:
+          if not(l==',' or l=='\n'):
+              new+=l
+      return(int(new))
+  
   # Récupération d'un pays dans la base
   def db_get_country(self,country):
     # préparation de la requête SQL
@@ -215,5 +286,5 @@ conn.row_factory = sqlite3.Row
 
 
 # instanciation et lancement du serveur
-httpd = socketserver.TCPServer(("", 8006), RequestHandler)
+httpd = socketserver.TCPServer(("", 8112), RequestHandler)
 httpd.serve_forever()
