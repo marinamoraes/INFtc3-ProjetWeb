@@ -285,6 +285,8 @@ def get_population(info):
         population='38,872,655'
     if info['common_name']=='Kazakhstan':
         population='18,448,600'
+    if info['common_name']=='Laos':
+        population='7,096,376'
     if info['common_name']=='Lebanon':
         population='5,469,612'
     if info['common_name']=='Myanmar':
