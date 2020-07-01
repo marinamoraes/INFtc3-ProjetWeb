@@ -92,7 +92,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       for c in data:
           listepop.append(self.conversion(c['population']))
       listepop.sort()
-      print(listepop)
       datan=[{},{},{},{},{}]
       for c in data:
           for i in range(1,6):
@@ -107,7 +106,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       for c in data:
           listepop.append(self.conversion(c['population']))
       listepop.sort()
-      print(listepop)
       datan=[{},{},{},{},{}]
       for c in data:
           for i in range(0,5):
@@ -122,7 +120,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       for c in data:
           listesup.append(int(c['superficie']))
       listesup.sort()
-      print(listesup)
       datan=[{},{},{},{},{}]
       for c in data:
           for i in range(1,6):
@@ -137,7 +134,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
       for c in data:
           listesup.append(int(c['superficie']))
       listesup.sort()
-      print(listesup)
       datan=[{},{},{},{},{}]
       for c in data:
           for i in range(0,5):
@@ -332,5 +328,5 @@ conn.row_factory = sqlite3.Row
 
 # instanciation et lancement du serveur
 
-httpd = socketserver.TCPServer(("", 8121), RequestHandler)
+httpd = socketserver.TCPServer(("", 8080), RequestHandler)
 httpd.serve_forever()
